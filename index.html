@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tacumrú Catandil — Cabañas en el Bosque</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest-deep: #1a2416;
+    --forest-mid: #2d3d27;
+    --forest-light: #4a5e42;
+    --moss: #7a9165;
+    --sage: #a8b89a;
+    --cream: #f5f0e8;
+    --parchment: #ede6d6;
+    --stone: #c8bfad;
+    --ember: #c4693a;
+    --ember-light: #e8845a;
+    --text-dark: #1a1a15;
+    --text-mid: #3d3d30;
+    --text-light: #6b6b58;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ── LANGUAGE TOGGLE ── */
+  #lang-toggle {
+    position: fixed;
+    top: 1.2rem;
+    right: 1.5rem;
+    z-index: 1000;
+    background: rgba(26,36,22,0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 999px;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid rgba(168,184,154,0.3);
+  }
+  #lang-toggle button {
+    border: none; background: none; cursor: pointer;
+    padding: 0.35rem 0.85rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--sage);
+    transition: all 0.25s;
+  }
+  #lang-toggle button.active {
+    background: var(--ember);
+    color: white;
+    border-radius: 999px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 900;
+    padding: 1.2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    transition: background 0.4s, backdrop-filter 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(26,36,22,0.9);
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: var(--cream);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--ember-light); font-style: italic; }
+  .nav-links {
+    margin-left: auto;
+    display: flex;
+    gap: 2.2rem;
+    list-style: none;
+    margin-right: 6rem;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: rgba(245,240,232,0.75);
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--cream); }
+
+  /* ── HERO ── */
+  #hero {
+    height: 100vh;
+    min-height: 640px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 2.5rem 5rem;
+    overflow: hidden;
+    background:
+      linear-gradient(to bottom, rgba(10,18,8,0.35) 0%, rgba(10,18,8,0.15) 40%, rgba(10,18,8,0.7) 100%),
+      url('https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1600&q=85') center/cover no-repeat;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: var(--ember);
+    color: white;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    margin-bottom: 1.2rem;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 7vw, 6rem);
+    color: var(--cream);
+    line-height: 1.05;
+    max-width: 700px;
+  }
+  .hero-title em { color: var(--ember-light); font-style: italic; }
+  .hero-sub {
+    font-size: 1rem;
+    color: rgba(245,240,232,0.75);
+    margin-top: 1rem;
+    max-width: 460px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .hero-cta {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .btn-primary {
+    background: var(--ember);
+    color: white;
+    border: none;
+    padding: 0.85rem 2rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: #b55a2e; transform: translateY(-1px); }
+  .btn-ghost {
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(245,240,232,0.4);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--cream); }
+
+  /* ── SECTION BASE ── */
+  section { padding: 5rem 2.5rem; }
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--forest-deep);
+    line-height: 1.15;
+    max-width: 560px;
+  }
+  .section-title em { font-style: italic; color: var(--forest-light); }
+
+  /* ── ABOUT STRIP ── */
+  #about {
+    background: var(--forest-deep);
+    display: flex;
+    gap: 4rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .about-img {
+    flex: 1 1 320px;
+    height: 420px;
+    background: url('https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=800&q=85') center/cover;
+    border-radius: 6px;
+  }
+  .about-text { flex: 1 1 320px; }
+  .about-text .section-title { color: var(--cream); max-width: 440px; }
+  .about-text .section-title em { color: var(--ember-light); }
+  .about-text p {
+    color: var(--sage);
+    line-height: 1.8;
+    font-weight: 300;
+    font-size: 0.95rem;
+    margin-top: 1.2rem;
+    max-width: 420px;
+  }
+  .about-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .stat-item { }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: var(--ember-light);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--sage);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  /* ── CABINS ── */
+  #cabins { background: var(--parchment); }
+  .cabins-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .cabin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .cabin-card {
+    background: var(--cream);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid rgba(200,191,173,0.5);
+  }
+  .cabin-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(26,36,22,0.15); }
+  .cabin-card.selected { border: 2px solid var(--ember); }
+  .cabin-img {
+    height: 220px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  .cabin-badge {
+    position: absolute;
+    top: 1rem; left: 1rem;
+    background: rgba(26,36,22,0.82);
+    color: var(--cream);
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+  }
+  .cabin-avail {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #6ab866;
+    box-shadow: 0 0 0 3px rgba(106,184,102,0.3);
+  }
+  .cabin-body { padding: 1.5rem; }
+  .cabin-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--forest-deep);
+  }
+  .cabin-tagline {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    margin-top: 0.3rem;
+    font-weight: 300;
+  }
+  .cabin-features {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .feature-pill {
+    background: var(--parchment);
+    color: var(--text-mid);
+    font-size: 0.72rem;
+    padding: 0.28rem 0.7rem;
+    border-radius: 999px;
+    letter-spacing: 0.06em;
+  }
+  .cabin-price {
+    margin-top: 1.2rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+  }
+  .price-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--ember);
+  }
+  .price-per { font-size: 0.78rem; color: var(--text-light); }
+  .btn-book {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.7rem;
+    background: var(--forest-deep);
+    color: var(--cream);
+    border: none;
+    border-radius: 4px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-book:hover { background: var(--forest-mid); }
+
+  /* ── GALLERY ── */
+  #gallery { background: var(--forest-deep); }
+  #gallery .section-title { color: var(--cream); }
+  #gallery .section-title em { color: var(--ember-light); }
+  .gallery-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin: 2rem 0 1.5rem;
+    flex-wrap: wrap;
+  }
+  .gallery-tab {
+    padding: 0.4rem 1.2rem;
+    border: 1px solid rgba(168,184,154,0.35);
+    color: var(--sage);
+    background: none;
+    border-radius: 999px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .gallery-tab.active, .gallery-tab:hover {
+    background: var(--ember);
+    border-color: var(--ember);
+    color: white;
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto;
+    gap: 0.6rem;
+  }
+  .g-item {
+    overflow: hidden;
+    border-radius: 5px;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+  .g-item:hover { opacity: 0.88; }
+  .g-item.wide { grid-column: span 7; height: 280px; }
+  .g-item.tall { grid-column: span 5; height: 280px; }
+  .g-item.half { grid-column: span 4; height: 200px; }
+  .g-item.third { grid-column: span 4; height: 200px; }
+
+  /* ── BOOKING ── */
+  #booking { background: var(--cream); }
+  .booking-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 3rem;
+    margin-top: 2.5rem;
+    align-items: start;
+  }
+  @media(max-width:820px){ .booking-layout { grid-template-columns: 1fr; } }
+
+  .booking-summary {
+    background: var(--forest-deep);
+    border-radius: 8px;
+    padding: 2rem;
+    position: sticky;
+    top: 6rem;
+  }
+  .booking-summary h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--cream);
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+  .sum-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--sage);
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(168,184,154,0.15);
+  }
+  .sum-row span:last-child { color: var(--cream); }
+  .sum-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+  .sum-total span:first-child { color: var(--sage); font-size: 0.85rem; }
+  .sum-total span:last-child {
+    font-family: 'Playfair Display', serif;
+    color: var(--ember-light);
+    font-size: 1.5rem;
+  }
+  .btn-confirm {
+    display: block;
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.85rem;
+    background: var(--ember);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-confirm:hover { background: #b55a2e; }
+
+  /* Calendar */
+  .booking-form { }
+  .form-section { margin-bottom: 2rem; }
+  .form-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+  .cabin-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+  }
+  .cabin-opt {
+    border: 1.5px solid var(--stone);
+    border-radius: 6px;
+    padding: 0.9rem 0.6rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+  }
+  .cabin-opt:hover { border-color: var(--moss); }
+  .cabin-opt.chosen { border-color: var(--ember); background: #fff6f2; }
+  .cabin-opt-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--forest-deep); }
+  .cabin-opt-price { font-size: 0.72rem; color: var(--text-light); margin-top: 0.2rem; }
+
+  .calendar-wrap {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--stone);
+    padding: 1.2rem;
+  }
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .cal-nav {
+    background: none;
+    border: 1px solid var(--stone);
+    border-radius: 4px;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-mid);
+    transition: background 0.15s;
+  }
+  .cal-nav:hover { background: var(--parchment); }
+  .cal-month {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--forest-deep);
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    text-align: center;
+  }
+  .cal-day-name {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    padding: 0.3rem 0;
+  }
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--text-dark);
+    transition: background 0.15s;
+    position: relative;
+  }
+  .cal-day:hover:not(.blocked):not(.empty) { background: var(--parchment); }
+  .cal-day.empty { cursor: default; }
+  .cal-day.today { font-weight: 500; }
+  .cal-day.blocked {
+    color: var(--stone);
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+  .cal-day.start-sel {
+    background: var(--ember);
+    color: white;
+    border-radius: 50% 0 0 50%;
+  }
+  .cal-day.end-sel {
+    background: var(--ember);
+    color: white;
+    border-radius: 0 50% 50% 0;
+  }
+  .cal-day.in-range {
+    background: #fce5d8;
+    border-radius: 0;
+    color: var(--text-dark);
+  }
+  .cal-day.start-sel.same-day { border-radius: 50%; }
+
+  .cal-legend {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.8rem;
+    flex-wrap: wrap;
+  }
+  .leg-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; color: var(--text-light); }
+  .leg-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .guests-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .guest-counter {
+    background: white;
+    border: 1px solid var(--stone);
+    border-radius: 6px;
+    padding: 0.7rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .guest-label { font-size: 0.82rem; color: var(--text-mid); }
+  .counter-ctrl { display: flex; align-items: center; gap: 0.6rem; }
+  .counter-btn {
+    width: 26px; height: 26px;
+    border: 1px solid var(--stone);
+    border-radius: 50%;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--text-mid);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .counter-btn:hover { border-color: var(--ember); color: var(--ember); }
+  .counter-val { font-size: 0.95rem; font-weight: 500; min-width: 20px; text-align: center; }
+
+  .form-input {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--stone);
+    border-radius: 6px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text-dark);
+    background: white;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-input:focus { border-color: var(--ember); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  @media(max-width:520px){ .form-row { grid-template-columns: 1fr; } }
+
+  /* ── AMENITIES ── */
+  #amenities { background: var(--parchment); }
+  .amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .amenity-card {
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border: 1px solid rgba(200,191,173,0.5);
+  }
+  .amenity-icon {
+    font-size: 1.6rem;
+    margin-bottom: 0.7rem;
+  }
+  .amenity-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--forest-deep);
+    margin-bottom: 0.3rem;
+  }
+  .amenity-desc { font-size: 0.8rem; color: var(--text-light); line-height: 1.5; }
+
+  /* ── TESTIMONIALS ── */
+  #reviews { background: var(--forest-mid); }
+  #reviews .section-title { color: var(--cream); }
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .review-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(168,184,154,0.2);
+    border-radius: 8px;
+    padding: 1.8rem;
+  }
+  .review-stars { color: var(--ember-light); letter-spacing: 0.1em; font-size: 0.9rem; margin-bottom: 1rem; }
+  .review-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.98rem;
+    color: var(--sage);
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
+  }
+  .reviewer { font-size: 0.78rem; color: rgba(168,184,154,0.6); letter-spacing: 0.08em; }
+
+  /* ── MAP / LOCATION ── */
+  #location { background: var(--cream); }
+  .location-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 2.5rem;
+    align-items: center;
+  }
+  @media(max-width:720px){ .location-layout { grid-template-columns: 1fr; } }
+  .location-map {
+    height: 360px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--stone);
+    background: #e8e0d4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .location-info h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--forest-deep);
+    margin-bottom: 1rem;
+  }
+  .location-info p { color: var(--text-mid); line-height: 1.8; font-size: 0.9rem; font-weight: 300; }
+  .distance-list { margin-top: 1.5rem; list-style: none; }
+  .distance-list li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.83rem;
+    color: var(--text-mid);
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(200,191,173,0.5);
+  }
+  .distance-list li span:last-child { color: var(--ember); font-weight: 500; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--forest-deep);
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .footer-brand .nav-logo { font-size: 1.4rem; }
+  .footer-brand p { color: var(--sage); font-size: 0.82rem; margin-top: 0.6rem; line-height: 1.7; max-width: 280px; font-weight: 300; }
+  .footer-col h4 { color: var(--cream); font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 0.5rem; }
+  .footer-col ul li a { color: var(--sage); font-size: 0.82rem; text-decoration: none; transition: color 0.2s; }
+  .footer-col ul li a:hover { color: var(--cream); }
+  .footer-bottom {
+    background: rgba(0,0,0,0.3);
+    text-align: center;
+    padding: 1rem 2.5rem;
+    font-size: 0.72rem;
+    color: rgba(168,184,154,0.5);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,18,8,0.7);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--cream);
+    border-radius: 10px;
+    padding: 2.5rem;
+    max-width: 520px;
+    width: 100%;
+    position: relative;
+  }
+  .modal h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--forest-deep);
+    margin-bottom: 0.5rem;
+  }
+  .modal p { color: var(--text-light); font-size: 0.88rem; margin-bottom: 1.5rem; }
+  .modal-close {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: var(--text-light);
+    line-height: 1;
+  }
+  .success-icon { font-size: 3rem; text-align: center; display: block; margin-bottom: 1rem; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-content > * {
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+  }
+  .hero-content > *:nth-child(1) { animation-delay: 0.2s; }
+  .hero-content > *:nth-child(2) { animation-delay: 0.4s; }
+  .hero-content > *:nth-child(3) { animation-delay: 0.55s; }
+  .hero-content > *:nth-child(4) { animation-delay: 0.7s; }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:700px){
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { display: none; }
+    section { padding: 3.5rem 1.2rem; }
+    #hero { padding: 0 1.2rem 3.5rem; }
+    .cabin-selector { grid-template-columns: 1fr; }
+    .g-item.wide, .g-item.tall { grid-column: span 12; }
+    .g-item.half, .g-item.third { grid-column: span 6; }
+    footer { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LANGUAGE TOGGLE -->
+<div id="lang-toggle">
+  <button class="active" onclick="setLang('es')">ES</button>
+  <button onclick="setLang('en')">EN</button>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Tacumrú <span>Catandil</span></a>
+  <ul class="nav-links">
+    <li><a href="#cabins" class="nav-link" data-es="Cabañas" data-en="Cabins">Cabañas</a></li>
+    <li><a href="#gallery" class="nav-link" data-es="Galería" data-en="Gallery">Galería</a></li>
+    <li><a href="#amenities" class="nav-link" data-es="Servicios" data-en="Amenities">Servicios</a></li>
+    <li><a href="#location" class="nav-link" data-es="Ubicación" data-en="Location">Ubicación</a></li>
+    <li><a href="#booking" class="nav-link" data-es="Reservar" data-en="Book">Reservar</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-tag lang-text" data-es="Cabañas en el Bosque · Catandil, Neuquén" data-en="Forest Cabins · Catandil, Neuquén">Cabañas en el Bosque · Catandil, Neuquén</div>
+    <h1 class="hero-title lang-text" data-es="Donde el bosque<br><em>te abraza</em>" data-en="Where the forest<br><em>holds you close</em>">Donde el bosque<br><em>te abraza</em></h1>
+    <p class="hero-sub lang-text" data-es="Tres cabañas únicas en la ladera del lago Catandil. Naturaleza, silencio y el calor del hogar." data-en="Three unique cabins on the shores of Lake Catandil. Nature, silence, and the warmth of home.">Tres cabañas únicas en la ladera del lago Catandil. Naturaleza, silencio y el calor del hogar.</p>
+    <div class="hero-cta">
+      <a href="#booking" class="btn-primary lang-text" data-es="Reservar Ahora" data-en="Book Now">Reservar Ahora</a>
+      <a href="#cabins" class="btn-ghost lang-text" data-es="Ver Cabañas" data-en="See Cabins">Ver Cabañas</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-img"></div>
+  <div class="about-text">
+    <div class="section-label">Tacumrú Catandil</div>
+    <h2 class="section-title lang-text" data-es="Un lugar fuera<br>del <em>tiempo</em>" data-en="A place outside<br>of <em>time</em>">Un lugar fuera<br>del <em>tiempo</em></h2>
+    <p class="lang-text" data-es="En el corazón de la Patagonia andina, rodeadas de arrayanes y coihues centenarios, nuestras tres cabañas ofrecen una experiencia única de contacto con la naturaleza sin renunciar a la comodidad." data-en="In the heart of the Andean Patagonia, surrounded by ancient arrayán and coihue trees, our three cabins offer a unique experience in nature without sacrificing comfort.">En el corazón de la Patagonia andina, rodeadas de arrayanes y coihues centenarios, nuestras tres cabañas ofrecen una experiencia única de contacto con la naturaleza sin renunciar a la comodidad.</p>
+    <div class="about-stats">
+      <div class="stat-item">
+        <div class="stat-num">3</div>
+        <div class="stat-label lang-text" data-es="Cabañas" data-en="Cabins">Cabañas</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">15+</div>
+        <div class="stat-label lang-text" data-es="Años de historia" data-en="Years of history">Años de historia</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">500+</div>
+        <div class="stat-label lang-text" data-es="Familias felices" data-en="Happy families">Familias felices</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CABINS -->
+<section id="cabins">
+  <div class="cabins-header">
+    <div>
+      <div class="section-label lang-text" data-es="Nuestras Cabañas" data-en="Our Cabins">Nuestras Cabañas</div>
+      <h2 class="section-title lang-text" data-es="Elige tu <em>refugio</em>" data-en="Choose your <em>refuge</em>">Elige tu <em>refugio</em></h2>
+    </div>
+    <a href="#booking" class="btn-primary lang-text" data-es="Ver Disponibilidad" data-en="Check Availability">Ver Disponibilidad</a>
+  </div>
+  <div class="cabin-grid">
+    <!-- Cabaña 1 -->
+    <div class="cabin-card" onclick="selectCabin(1)">
+      <div class="cabin-img" style="background-image:url('https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=600&q=80')">
+        <div class="cabin-badge lang-text" data-es="2–4 personas" data-en="2–4 guests">2–4 personas</div>
+        <div class="cabin-avail"></div>
+      </div>
+      <div class="cabin-body">
+        <div class="cabin-name">La Araucaria</div>
+        <div class="cabin-tagline lang-text" data-es="Vista al lago · Chimenea · Deck privado" data-en="Lake view · Fireplace · Private deck">Vista al lago · Chimenea · Deck privado</div>
+        <div class="cabin-features">
+          <span class="feature-pill lang-text" data-es="1 Dormitorio" data-en="1 Bedroom">1 Dormitorio</span>
+          <span class="feature-pill">WiFi</span>
+          <span class="feature-pill lang-text" data-es="Parrilla" data-en="BBQ">Parrilla</span>
+          <span class="feature-pill lang-text" data-es="Mascotas OK" data-en="Pets OK">Mascotas OK</span>
+        </div>
+        <div class="cabin-price">
+          <span class="price-amount">$85 USD</span>
+          <span class="price-per lang-text" data-es="/ noche" data-en="/ night">/ noche</span>
+        </div>
+        <button class="btn-book lang-text" onclick="scrollToBook(1)" data-es="Reservar esta cabaña" data-en="Book this cabin">Reservar esta cabaña</button>
+      </div>
+    </div>
+
+    <!-- Cabaña 2 -->
+    <div class="cabin-card" onclick="selectCabin(2)">
+      <div class="cabin-img" style="background-image:url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80')">
+        <div class="cabin-badge lang-text" data-es="4–6 personas" data-en="4–6 guests">4–6 personas</div>
+        <div class="cabin-avail"></div>
+      </div>
+      <div class="cabin-body">
+        <div class="cabin-name">El Coihue</div>
+        <div class="cabin-tagline lang-text" data-es="Entre árboles · Bañera exterior · Cocina equipada" data-en="Forest facing · Outdoor tub · Full kitchen">Entre árboles · Bañera exterior · Cocina equipada</div>
+        <div class="cabin-features">
+          <span class="feature-pill lang-text" data-es="2 Dormitorios" data-en="2 Bedrooms">2 Dormitorios</span>
+          <span class="feature-pill">WiFi</span>
+          <span class="feature-pill lang-text" data-es="Jacuzzi" data-en="Jacuzzi">Jacuzzi</span>
+          <span class="feature-pill lang-text" data-es="Parrilla" data-en="BBQ">Parrilla</span>
+        </div>
+        <div class="cabin-price">
+          <span class="price-amount">$120 USD</span>
+          <span class="price-per lang-text" data-es="/ noche" data-en="/ night">/ noche</span>
+        </div>
+        <button class="btn-book lang-text" onclick="scrollToBook(2)" data-es="Reservar esta cabaña" data-en="Book this cabin">Reservar esta cabaña</button>
+      </div>
+    </div>
+
+    <!-- Cabaña 3 -->
+    <div class="cabin-card" onclick="selectCabin(3)">
+      <div class="cabin-img" style="background-image:url('https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=600&q=80')">
+        <div class="cabin-badge lang-text" data-es="6–8 personas" data-en="6–8 guests">6–8 personas</div>
+        <div class="cabin-avail"></div>
+      </div>
+      <div class="cabin-body">
+        <div class="cabin-name">El Arrayán</div>
+        <div class="cabin-tagline lang-text" data-es="La más grande · Salón amplio · 2 baños" data-en="Largest cabin · Open lounge · 2 bathrooms">La más grande · Salón amplio · 2 baños</div>
+        <div class="cabin-features">
+          <span class="feature-pill lang-text" data-es="3 Dormitorios" data-en="3 Bedrooms">3 Dormitorios</span>
+          <span class="feature-pill">WiFi</span>
+          <span class="feature-pill lang-text" data-es="2 Baños" data-en="2 Bathrooms">2 Baños</span>
+          <span class="feature-pill lang-text" data-es="Parrilla" data-en="BBQ">Parrilla</span>
+        </div>
+        <div class="cabin-price">
+          <span class="price-amount">$160 USD</span>
+          <span class="price-per lang-text" data-es="/ noche" data-en="/ night">/ noche</span>
+        </div>
+        <button class="btn-book lang-text" onclick="scrollToBook(3)" data-es="Reservar esta cabaña" data-en="Book this cabin">Reservar esta cabaña</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="section-label lang-text" data-es="Galería de Imágenes" data-en="Photo Gallery">Galería de Imágenes</div>
+  <h2 class="section-title lang-text" data-es="Vive la <em>experiencia</em>" data-en="Live the <em>experience</em>">Vive la <em>experiencia</em></h2>
+
+  <div class="gallery-tabs">
+    <button class="gallery-tab active" onclick="filterGallery('all')" data-es="Todas" data-en="All">Todas</button>
+    <button class="gallery-tab" onclick="filterGallery(1)" data-es="La Araucaria" data-en="La Araucaria">La Araucaria</button>
+    <button class="gallery-tab" onclick="filterGallery(2)" data-es="El Coihue" data-en="El Coihue">El Coihue</button>
+    <button class="gallery-tab" onclick="filterGallery(3)" data-es="El Arrayán" data-en="El Arrayán">El Arrayán</button>
+  </div>
+
+  <div class="gallery-grid" id="galleryGrid">
+    <div class="g-item wide" data-cabin="1" style="background-image:url('https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=900&q=80')"></div>
+    <div class="g-item tall" data-cabin="1" style="background-image:url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80')"></div>
+    <div class="g-item half" data-cabin="2" style="background-image:url('https://images.unsplash.com/photo-1475113548492-b67a8a27d7e4?w=600&q=80')"></div>
+    <div class="g-item half" data-cabin="2" style="background-image:url('https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=600&q=80')"></div>
+    <div class="g-item third" data-cabin="3" style="background-image:url('https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=600&q=80')"></div>
+    <div class="g-item wide" data-cabin="3" style="background-image:url('https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=900&q=80')"></div>
+    <div class="g-item tall" data-cabin="1" style="background-image:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&q=80')"></div>
+    <div class="g-item half" data-cabin="2" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80')"></div>
+    <div class="g-item half" data-cabin="3" style="background-image:url('https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=80')"></div>
+    <div class="g-item third" data-cabin="1" style="background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80')"></div>
+  </div>
+</section>
+
+<!-- AMENITIES -->
+<section id="amenities">
+  <div class="section-label lang-text" data-es="Lo que incluimos" data-en="What's included">Lo que incluimos</div>
+  <h2 class="section-title lang-text" data-es="Comodidades del <em>bosque</em>" data-en="Forest <em>comforts</em>">Comodidades del <em>bosque</em></h2>
+  <div class="amenities-grid">
+    <div class="amenity-card">
+      <div class="amenity-icon">🔥</div>
+      <div class="amenity-name lang-text" data-es="Chimenea" data-en="Fireplace">Chimenea</div>
+      <div class="amenity-desc lang-text" data-es="Leña incluida para noches frescas junto al fuego." data-en="Firewood included for cozy evenings by the fire.">Leña incluida para noches frescas junto al fuego.</div>
+    </div>
+    <div class="amenity-card">
+      <div class="amenity-icon">🌊</div>
+      <div class="amenity-name lang-text" data-es="Acceso al Lago" data-en="Lake Access">Acceso al Lago</div>
+      <div class="amenity-desc lang-text" data-es="Acceso privado a la orilla del lago Catandil." data-en="Private access to the shores of Lake Catandil.">Acceso privado a la orilla del lago Catandil.</div>
+    </div>
+    <div class="amenity-card">
+      <div class="amenity-icon">🍖</div>
+      <div class="amenity-name lang-text" data-es="Parrilla" data-en="BBQ Grill">Parrilla</div>
+      <div class="amenity-desc lang-text" data-es="Parrilla argentina equipada en cada cabaña." data-en="Fully equipped Argentine BBQ at every cabin.">Parrilla argentina equipada en cada cabaña.</div>
+    </div>
+    <div class="amenity-card">
+      <div class="amenity-icon">📶</div>
+      <div class="amenity-name">WiFi</div>
+      <div class="amenity-desc lang-text" data-es="Conexión de buena velocidad disponible." data-en="Reliable internet connection available.">Conexión de buena velocidad disponible.</div>
+    </div>
+    <div class="amenity-card">
+      <div class="amenity-icon">🐕</div>
+      <div class="amenity-name lang-text" data-es="Pet Friendly" data-en="Pet Friendly">Pet Friendly</div>
+      <div class="amenity-desc lang-text" data-es="Algunas cabañas aceptan mascotas. Consultar." data-en="Some cabins welcome pets. Ask us.">Algunas cabañas aceptan mascotas. Consultar.</div>
+    </div>
+    <div class="amenity-card">
+      <div class="amenity-icon">🌲</div>
+      <div class="amenity-name lang-text" data-es="Senderos" data-en="Hiking Trails">Senderos</div>
+      <div class="amenity-desc lang-text" data-es="Acceso directo a senderos dentro del bosque." data-en="Direct access to trails through the forest.">Acceso directo a senderos dentro del bosque.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="section-label lang-text" data-es="Reservas Online" data-en="Online Booking">Reservas Online</div>
+  <h2 class="section-title lang-text" data-es="Reserva tu <em>estadía</em>" data-en="Reserve your <em>stay</em>">Reserva tu <em>estadía</em></h2>
+
+  <div class="booking-layout">
+    <!-- FORM -->
+    <div class="booking-form">
+      <!-- Cabin selector -->
+      <div class="form-section">
+        <label class="form-label lang-text" data-es="Elige tu Cabaña" data-en="Choose Your Cabin">Elige tu Cabaña</label>
+        <div class="cabin-selector">
+          <div class="cabin-opt chosen" id="opt1" onclick="chooseCabin(1)">
+            <div class="cabin-opt-name">La Araucaria</div>
+            <div class="cabin-opt-price">$85 USD/noche</div>
+          </div>
+          <div class="cabin-opt" id="opt2" onclick="chooseCabin(2)">
+            <div class="cabin-opt-name">El Coihue</div>
+            <div class="cabin-opt-price">$120 USD/noche</div>
+          </div>
+          <div class="cabin-opt" id="opt3" onclick="chooseCabin(3)">
+            <div class="cabin-opt-name">El Arrayán</div>
+            <div class="cabin-opt-price">$160 USD/noche</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calendar -->
+      <div class="form-section">
+        <label class="form-label lang-text" data-es="Fechas de Estadía" data-en="Stay Dates">Fechas de Estadía</label>
+        <div class="calendar-wrap">
+          <div class="cal-header">
+            <button class="cal-nav" onclick="changeMonth(-1)">&#8249;</button>
+            <div class="cal-month" id="calMonthLabel"></div>
+            <button class="cal-nav" onclick="changeMonth(1)">&#8250;</button>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+          <div class="cal-legend">
+            <div class="leg-item"><div class="leg-dot" style="background:var(--ember)"></div><span class="lang-text" data-es="Seleccionado" data-en="Selected">Seleccionado</span></div>
+            <div class="leg-item"><div class="leg-dot" style="background:#fce5d8"></div><span class="lang-text" data-es="En rango" data-en="In range">En rango</span></div>
+            <div class="leg-item"><div class="leg-dot" style="background:var(--stone)"></div><span class="lang-text" data-es="No disponible" data-en="Not available">No disponible</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guests -->
+      <div class="form-section">
+        <label class="form-label lang-text" data-es="Huéspedes" data-en="Guests">Huéspedes</label>
+        <div class="guests-row">
+          <div class="guest-counter">
+            <span class="guest-label lang-text" data-es="Adultos" data-en="Adults">Adultos</span>
+            <div class="counter-ctrl">
+              <button class="counter-btn" onclick="adjustGuests('adults',-1)">−</button>
+              <span class="counter-val" id="adultsVal">2</span>
+              <button class="counter-btn" onclick="adjustGuests('adults',1)">+</button>
+            </div>
+          </div>
+          <div class="guest-counter">
+            <span class="guest-label lang-text" data-es="Niños" data-en="Children">Niños</span>
+            <div class="counter-ctrl">
+              <button class="counter-btn" onclick="adjustGuests('kids',-1)">−</button>
+              <span class="counter-val" id="kidsVal">0</span>
+              <button class="counter-btn" onclick="adjustGuests('kids',1)">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guest info -->
+      <div class="form-section">
+        <label class="form-label lang-text" data-es="Datos del Titular" data-en="Your Details">Datos del Titular</label>
+        <div class="form-row" style="margin-bottom:0.8rem">
+          <input class="form-input lang-placeholder" type="text" data-placeholder-es="Nombre" data-placeholder-en="First name" placeholder="Nombre">
+          <input class="form-input lang-placeholder" type="text" data-placeholder-es="Apellido" data-placeholder-en="Last name" placeholder="Apellido">
+        </div>
+        <div class="form-row" style="margin-bottom:0.8rem">
+          <input class="form-input lang-placeholder" type="email" data-placeholder-es="Email" data-placeholder-en="Email" placeholder="Email">
+          <input class="form-input lang-placeholder" type="tel" data-placeholder-es="Teléfono / WhatsApp" data-placeholder-en="Phone / WhatsApp" placeholder="Teléfono / WhatsApp">
+        </div>
+        <textarea class="form-input lang-placeholder" rows="3" data-placeholder-es="Mensaje o consulta (opcional)" data-placeholder-en="Message or question (optional)" placeholder="Mensaje o consulta (opcional)" style="resize:vertical"></textarea>
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="booking-summary">
+      <h3 class="lang-text" data-es="Resumen de Reserva" data-en="Booking Summary">Resumen de Reserva</h3>
+      <div class="sum-row">
+        <span class="lang-text" data-es="Cabaña" data-en="Cabin">Cabaña</span>
+        <span id="sumCabin">La Araucaria</span>
+      </div>
+      <div class="sum-row">
+        <span class="lang-text" data-es="Check-in" data-en="Check-in">Check-in</span>
+        <span id="sumCheckin" class="lang-text" data-es="Seleccionar" data-en="Select">Seleccionar</span>
+      </div>
+      <div class="sum-row">
+        <span class="lang-text" data-es="Check-out" data-en="Check-out">Check-out</span>
+        <span id="sumCheckout" class="lang-text" data-es="Seleccionar" data-en="Select">Seleccionar</span>
+      </div>
+      <div class="sum-row">
+        <span class="lang-text" data-es="Noches" data-en="Nights">Noches</span>
+        <span id="sumNights">—</span>
+      </div>
+      <div class="sum-row">
+        <span class="lang-text" data-es="Huéspedes" data-en="Guests">Huéspedes</span>
+        <span id="sumGuests">2 adultos</span>
+      </div>
+      <div class="sum-total">
+        <span class="lang-text" data-es="Total estimado" data-en="Estimated total">Total estimado</span>
+        <span id="sumTotal">$85 USD</span>
+      </div>
+      <button class="btn-confirm lang-text" onclick="confirmBooking()" data-es="Confirmar Reserva" data-en="Confirm Booking">Confirmar Reserva</button>
+      <p style="font-size:0.72rem;color:var(--sage);margin-top:1rem;text-align:center;line-height:1.6" class="lang-text" data-es="Te contactaremos por email para confirmar disponibilidad y coordinar el pago." data-en="We'll reach out by email to confirm availability and coordinate payment.">Te contactaremos por email para confirmar disponibilidad y coordinar el pago.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="section-label lang-text" data-es="Nuestros Huéspedes" data-en="Our Guests">Nuestros Huéspedes</div>
+  <h2 class="section-title lang-text" data-es="Lo que dicen de <em>Tacumrú</em>" data-en="What guests say about <em>Tacumrú</em>">Lo que dicen de <em>Tacumrú</em></h2>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text lang-text" data-es="&ldquo;La cabaña La Araucaria es mágica. Despertarse con el lago frente a los ojos y el silencio del bosque es algo que no se puede describir.&rdquo;" data-en="&ldquo;La Araucaria cabin is magical. Waking up with the lake right there and the silence of the forest is something words can't capture.&rdquo;">"La cabaña La Araucaria es mágica. Despertarse con el lago frente a los ojos y el silencio del bosque es algo que no se puede describir."</div>
+      <div class="reviewer">Valentina M. — Buenos Aires</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text lang-text" data-es="&ldquo;El Coihue superó todas las expectativas. El jacuzzi exterior con vista al bosque de noche fue una experiencia increíble. Volvemos el año próximo.&rdquo;" data-en="&ldquo;El Coihue exceeded all expectations. The outdoor jacuzzi with forest views at night was an incredible experience. We're coming back next year.&rdquo;">"El Coihue superó todas las expectativas. El jacuzzi exterior con vista al bosque de noche fue una experiencia increíble. Volvemos el año próximo."</div>
+      <div class="reviewer">Carlos & Ana R. — Mendoza</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <div class="review-text lang-text" data-es="&ldquo;Vinimos con toda la familia a El Arrayán y fue perfecto. Espacio, naturaleza, y los dueños son muy amables. 100% recomendado.&rdquo;" data-en="&ldquo;We brought the whole family to El Arrayán and it was perfect. Space, nature, and the owners are incredibly welcoming. 100% recommended.&rdquo;">"Vinimos con toda la familia a El Arrayán y fue perfecto. Espacio, naturaleza, y los dueños son muy amables. 100% recomendado."</div>
+      <div class="reviewer">Familia Torres — Rosario</div>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section id="location">
+  <div class="section-label lang-text" data-es="Cómo llegar" data-en="Getting There">Cómo llegar</div>
+  <h2 class="section-title lang-text" data-es="En el corazón de la <em>Patagonia</em>" data-en="In the heart of <em>Patagonia</em>">En el corazón de la <em>Patagonia</em></h2>
+  <div class="location-layout">
+    <div class="location-map">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--stone)"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+      <span style="font-size:0.82rem;color:var(--text-light)">Catandil, Neuquén, Argentina</span>
+      <a href="https://maps.google.com/?q=Catandil,Neuquen,Argentina" target="_blank" style="color:var(--ember);font-size:0.78rem;text-decoration:none;margin-top:0.4rem" class="lang-text" data-es="Ver en Google Maps →" data-en="Open in Google Maps →">Ver en Google Maps →</a>
+    </div>
+    <div class="location-info">
+      <h3 class="lang-text" data-es="Catandil, Neuquén" data-en="Catandil, Neuquén">Catandil, Neuquén</h3>
+      <p class="lang-text" data-es="A orillas del lago Catandil, en el departamento de Lácar, nuestra propiedad se encuentra rodeada de bosque nativo patagónico. El acceso es por camino de ripio en buen estado, apto para autos bajos." data-en="On the shores of Lake Catandil in the Lácar region, our property is surrounded by native Patagonian forest. Access is via a well-maintained gravel road, suitable for regular vehicles.">A orillas del lago Catandil, en el departamento de Lácar, nuestra propiedad se encuentra rodeada de bosque nativo patagónico. El acceso es por camino de ripio en buen estado, apto para autos bajos.</p>
+      <ul class="distance-list">
+        <li><span class="lang-text" data-es="San Martín de los Andes" data-en="San Martín de los Andes">San Martín de los Andes</span><span>35 km</span></li>
+        <li><span class="lang-text" data-es="Villa La Angostura" data-en="Villa La Angostura">Villa La Angostura</span><span>80 km</span></li>
+        <li><span class="lang-text" data-es="Aeropuerto Chapelco" data-en="Chapelco Airport">Aeropuerto Chapelco</span><span>48 km</span></li>
+        <li><span class="lang-text" data-es="Bariloche" data-en="Bariloche">Bariloche</span><span>110 km</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <a href="#" class="nav-logo">Tacumrú <span>Catandil</span></a>
+    <p class="lang-text" data-es="Cabañas en el bosque patagónico. Naturaleza, silencio y el calor del hogar." data-en="Cabins in the Patagonian forest. Nature, silence, and the warmth of home.">Cabañas en el bosque patagónico. Naturaleza, silencio y el calor del hogar.</p>
+  </div>
+  <div class="footer-col">
+    <h4 class="lang-text" data-es="Cabañas" data-en="Cabins">Cabañas</h4>
+    <ul>
+      <li><a href="#booking" onclick="chooseCabin(1)">La Araucaria</a></li>
+      <li><a href="#booking" onclick="chooseCabin(2)">El Coihue</a></li>
+      <li><a href="#booking" onclick="chooseCabin(3)">El Arrayán</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4 class="lang-text" data-es="Contacto" data-en="Contact">Contacto</h4>
+    <ul>
+      <li><a href="/cdn-cgi/l/email-protection#d6bfb8b0b996a2b7b5a3bba4a3b5b7a2b7b8b2bfbaf8b5b9bbf8b7a4"><span class="__cf_email__" data-cfemail="51383f373e11253032243c2324323025303f35383d7f323e3c7f3023">[email&#160;protected]</span></a></li>
+      <li><a href="https://wa.me/54XXXXXXXXXX" target="_blank">WhatsApp</a></li>
+      <li><a href="https://instagram.com/tacumrucatandil" target="_blank">Instagram</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4 class="lang-text" data-es="Información" data-en="Information">Información</h4>
+    <ul>
+      <li><a href="#" class="lang-text" data-es="Política de reservas" data-en="Booking policy">Política de reservas</a></li>
+      <li><a href="#" class="lang-text" data-es="Reglamento interno" data-en="House rules">Reglamento interno</a></li>
+      <li><a href="#" class="lang-text" data-es="Preguntas frecuentes" data-en="FAQ">Preguntas frecuentes</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  © 2025 Tacumrú Catandil · Catandil, Neuquén, Argentina
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <span class="success-icon">🌲</span>
+    <h2 class="lang-text" data-es="¡Reserva Enviada!" data-en="Booking Sent!">¡Reserva Enviada!</h2>
+    <p class="lang-text" data-es="Gracias por tu reserva en Tacumrú Catandil. Te contactaremos en las próximas horas para confirmar disponibilidad y coordinar el pago." data-en="Thank you for your booking at Tacumrú Catandil. We'll be in touch within a few hours to confirm availability and coordinate payment.">Gracias por tu reserva en Tacumrú Catandil. Te contactaremos en las próximas horas para confirmar disponibilidad y coordinar el pago.</p>
+    <button class="btn-confirm lang-text" onclick="closeModal()" data-es="Entendido" data-en="Got it">Entendido</button>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── STATE ──
+let currentLang = 'es';
+let currentCabin = 1;
+let cabinPrices = { 1: 85, 2: 120, 3: 160 };
+let cabinNames  = { 1: 'La Araucaria', 2: 'El Coihue', 3: 'El Arrayán' };
+let adults = 2, kids = 0;
+let calYear, calMonth;
+let selStart = null, selEnd = null;
+let selecting = false;
+
+const BLOCKED = {
+  1: ['2025-04-10','2025-04-11','2025-04-12','2025-04-20','2025-04-21','2025-05-01','2025-05-02','2025-05-03'],
+  2: ['2025-04-05','2025-04-06','2025-04-15','2025-04-16','2025-04-25','2025-05-05','2025-05-06'],
+  3: ['2025-04-08','2025-04-09','2025-04-18','2025-04-19','2025-04-28','2025-04-29','2025-04-30']
+};
+
+// ── NAV ──
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', scrollY > 60);
+});
+
+// ── LANGUAGE ──
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('#lang-toggle button').forEach((b,i)=>{
+    b.classList.toggle('active', (i===0 && lang==='es') || (i===1 && lang==='en'));
+  });
+  document.querySelectorAll('.lang-text').forEach(el => {
+    const val = el.getAttribute('data-'+lang);
+    if(val) el.innerHTML = val;
+  });
+  document.querySelectorAll('.lang-placeholder').forEach(el => {
+    const val = el.getAttribute('data-placeholder-'+lang);
+    if(val) el.placeholder = val;
+  });
+  document.querySelectorAll('.gallery-tab').forEach(el => {
+    const val = el.getAttribute('data-'+lang);
+    if(val) el.textContent = val;
+  });
+  updateSummary();
+  renderCalendar();
+}
+
+// ── CABIN SELECT ──
+function chooseCabin(n) {
+  currentCabin = n;
+  [1,2,3].forEach(i => {
+    document.getElementById('opt'+i).classList.toggle('chosen', i===n);
+  });
+  selStart = null; selEnd = null; selecting = false;
+  renderCalendar();
+  updateSummary();
+}
+
+function selectCabin(n) { chooseCabin(n); }
+function scrollToBook(n) { chooseCabin(n); document.getElementById('booking').scrollIntoView({behavior:'smooth'}); }
+
+// ── GUEST COUNTERS ──
+function adjustGuests(type, delta) {
+  if(type==='adults') { adults = Math.max(1, adults+delta); document.getElementById('adultsVal').textContent = adults; }
+  else { kids = Math.max(0, kids+delta); document.getElementById('kidsVal').textContent = kids; }
+  updateSummary();
+}
+
+// ── CALENDAR ──
+const MONTHS_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const MONTHS_EN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS_ES = ['Lu','Ma','Mi','Ju','Vi','Sa','Do'];
+const DAYS_EN = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+
+function initCalendar() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+  renderCalendar();
+}
+
+function changeMonth(d) {
+  calMonth += d;
+  if(calMonth > 11) { calMonth = 0; calYear++; }
+  if(calMonth < 0)  { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function toISO(y,m,d){ return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
+function fromISO(s){ const p=s.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+
+function renderCalendar() {
+  const grid = document.getElementById('calGrid');
+  const label = document.getElementById('calMonthLabel');
+  const months = currentLang==='es' ? MONTHS_ES : MONTHS_EN;
+  const days   = currentLang==='es' ? DAYS_ES : DAYS_EN;
+  label.textContent = months[calMonth] + ' ' + calYear;
+
+  grid.innerHTML = '';
+  days.forEach(d => {
+    const h = document.createElement('div');
+    h.className = 'cal-day-name'; h.textContent = d;
+    grid.appendChild(h);
+  });
+
+  const first = new Date(calYear, calMonth, 1);
+  let startDow = (first.getDay() + 6) % 7; // Mon=0
+  for(let i=0;i<startDow;i++){
+    const e = document.createElement('div'); e.className='cal-day empty'; grid.appendChild(e);
+  }
+
+  const days_in = new Date(calYear,calMonth+1,0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  const blocked = BLOCKED[currentCabin] || [];
+
+  for(let d=1; d<=days_in; d++){
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+    cell.textContent = d;
+    const iso = toISO(calYear, calMonth, d);
+    const dt = fromISO(iso); dt.setHours(0,0,0,0);
+
+    if(dt < today) { cell.classList.add('blocked'); }
+    else if(blocked.includes(iso)) { cell.classList.add('blocked'); }
+    else {
+      if(iso === (today.toISOString().slice(0,10))) cell.classList.add('today');
+
+      const s = selStart, e = selEnd;
+      if(s && iso === s) cell.classList.add('start-sel');
+      if(e && iso === e) cell.classList.add('end-sel');
+      if(s && !e && iso === s) cell.classList.add('start-sel','same-day');
+      if(s && e && iso > s && iso < e) cell.classList.add('in-range');
+
+      cell.addEventListener('click', () => pickDate(iso));
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function pickDate(iso) {
+  if(!selecting || (selStart && selEnd)) {
+    selStart = iso; selEnd = null; selecting = true;
+  } else {
+    if(iso < selStart) { selEnd = selStart; selStart = iso; }
+    else { selEnd = iso; }
+    selecting = false;
+  }
+  renderCalendar();
+  updateSummary();
+}
+
+// ── SUMMARY ──
+function updateSummary() {
+  const none = currentLang==='es' ? 'Seleccionar' : 'Select';
+  document.getElementById('sumCabin').textContent = cabinNames[currentCabin];
+  document.getElementById('sumCheckin').textContent  = selStart ? formatDate(selStart) : none;
+  document.getElementById('sumCheckout').textContent = selEnd   ? formatDate(selEnd)   : none;
+
+  let nights = 0;
+  if(selStart && selEnd) {
+    const diff = (fromISO(selEnd) - fromISO(selStart)) / 86400000;
+    nights = Math.max(0, diff);
+  }
+  document.getElementById('sumNights').textContent = nights > 0 ? nights + (currentLang==='es' ? ' noches' : ' nights') : '—';
+  const gStr = adults + (currentLang==='es' ? ' adultos' : ' adults') + (kids > 0 ? ', ' + kids + (currentLang==='es' ? ' niños' : ' children') : '');
+  document.getElementById('sumGuests').textContent = gStr;
+  const total = nights > 0 ? '$' + (nights * cabinPrices[currentCabin]) + ' USD' : '$' + cabinPrices[currentCabin] + ' USD';
+  document.getElementById('sumTotal').textContent = total;
+}
+
+function formatDate(iso) {
+  const d = fromISO(iso);
+  const months = currentLang==='es' ? ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+                                     : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+// ── BOOKING CONFIRM ──
+function confirmBooking() {
+  if(!selStart || !selEnd) {
+    alert(currentLang==='es' ? 'Por favor selecciona las fechas de entrada y salida.' : 'Please select check-in and check-out dates.');
+    return;
+  }
+  document.getElementById('successModal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('successModal').classList.remove('open');
+}
+
+// ── GALLERY FILTER ──
+function filterGallery(cabin) {
+  document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAl
